@@ -30,11 +30,14 @@ class tzfile(tzfile):
 
 
 def getzoneinfofile_stream():
-    try:
-        return BytesIO(get_data(__name__, _ZONEFILENAME))
-    except IOError as e:  # TODO  switch to FileNotFoundError?
-        warnings.warn("I/O error({0}): {1}".format(e.errno, e.strerror))
+    search_root = os.environ.get('ZONEINFO_DATA', os.path.join(os.path.dirname(__file__)))
+    if not os.path.exists(search_root):
         return None
+    filenames = sorted(os.listdir(search_root))
+    for entry in filenames:
+        if entry.startswith("zoneinfo") and ".tar." in entry:
+            return os.path.join(os.path.abspath(search_root), entry)
+    return None
 
 
 class ZoneInfoFile(object):
