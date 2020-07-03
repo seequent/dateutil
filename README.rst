@@ -1,5 +1,27 @@
-dateutil - powerfull extensions to datetime
-===========================================
+dateutil - powerful extensions to datetime
+==========================================
+
+.. image:: https://img.shields.io/travis/dateutil/dateutil/master.svg?style=flat-square
+    :target: https://travis-ci.org/dateutil/dateutil
+    :alt: travis build status
+
+.. image:: https://img.shields.io/appveyor/ci/dateutil/dateutil/master.svg?style=flat-square
+    :target: https://ci.appveyor.com/project/dateutil/dateutil
+    :alt: appveyor build status
+
+.. image:: https://codecov.io/github/dateutil/dateutil/coverage.svg?branch=master
+    :target: https://codecov.io/github/dateutil/dateutil?branch=master
+    :alt: Code coverage
+
+.. image:: https://img.shields.io/pypi/dd/python-dateutil.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/python-dateutil/
+    :alt: pypi downloads per day
+
+.. image:: https://img.shields.io/pypi/v/python-dateutil.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/python-dateutil/
+    :alt: pypi version
+
+
 The `dateutil` module provides powerful extensions to
 the standard `datetime` module, available in Python.
 
@@ -10,7 +32,7 @@ dateutil is available on PyPI
 https://pypi.python.org/pypi/python-dateutil/
 
 The documentation is hosted at:
-https://dateutil.readthedocs.org/
+https://dateutil.readthedocs.io/
 
 Code
 ====
@@ -24,8 +46,7 @@ Features
 * Computing of relative deltas between two given
   date and/or datetime objects;
 * Computing of dates based on very flexible recurrence rules,
-  using a superset of the
-  [ftp://ftp.rfc-editor.org/in-notes/rfc2445.txt iCalendar]
+  using a superset of the `iCalendar <https://www.ietf.org/rfc/rfc2445.txt>`_
   specification. Parsing of RFC strings is supported as well.
 * Generic parsing of dates in almost any string format;
 * Timezone (tzinfo) implementations for tzfile(5) format
@@ -38,7 +59,7 @@ Features
   Olson's database.
 * Computing of Easter Sunday dates for any given year,
   using Western, Orthodox or Julian algorithms;
-* More than 400 test cases.
+* A comprehensive test suite.
 
 Quick example
 =============
@@ -76,23 +97,35 @@ Being exactly 6 months ahead was **really** a coincidence :)
 Author
 ======
 The dateutil module was written by Gustavo Niemeyer <gustavo@niemeyer.net>
-in 2003
+in 2003.
 
 It is maintained by:
 
 * Gustavo Niemeyer <gustavo@niemeyer.net> 2003-2011
 * Tomi Pieviläinen <tomi.pievilainen@iki.fi> 2012-2014
-* Yaron de Leeuw <me@jarondl.net> 2014-
+* Yaron de Leeuw <me@jarondl.net> 2014-2016
+* Paul Ganssle <paul@ganssle.io> 2015-
+
+Our mailing list is available at `dateutil@python.org <https://mail.python.org/mailman/listinfo/dateutil>`_. As it is hosted by the PSF, it is subject to the `PSF code of
+conduct <https://www.python.org/psf/codeofconduct/>`_.
 
 Building and releasing
 ======================
 When you get the source, it does not contain the internal zoneinfo
 database. To get (and update) the database, run the updatezinfo.py script. Make sure
 that the zic command is in your path, and that you have network connectivity
-to get the latest timezone information from IANA. If you have downloaded
-the timezone data earlier, you can give the tarball as a parameter to
-updatezinfo.py.
+to get the latest timezone information from IANA, or from `our mirror of the
+IANA database <https://dateutil.github.io/tzdata/>`_.
 
+Starting with version 2.4.1, all source and binary distributions will be signed
+by a PGP key that has, at the very least, been signed by the key which made the
+previous release. A table of release signing keys can be found below:
+
+===========  ============================
+Releases     Signing key fingerprint
+===========  ============================
+2.4.1-       `6B49 ACBA DCF6 BD1C A206 67AB CD54 FCE3 D964 BEFB`_
+===========  ============================
 
 Testing
 =======
@@ -101,6 +134,10 @@ dateutil has a comprehensive test suite, which can be run simply by running
 zoneinfo database, some tests will fail. Apart from that, all tests should pass.
 
 To easily test dateutil against all supported Python versions, you can use
-`tox <https://tox.readthedocs.org/en/latest/>`_.
+`tox <https://tox.readthedocs.io/en/latest/>`_.
 
-All github pull requests are automatically tested using travis.
+All github pull requests are automatically tested using travis and appveyor.
+
+
+.. _6B49 ACBA DCF6 BD1C A206 67AB CD54 FCE3 D964 BEFB:
+   https://pgp.mit.edu/pks/lookup?op=vindex&search=0xCD54FCE3D964BEFB
