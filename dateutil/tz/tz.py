@@ -162,14 +162,59 @@ class tzlocal(_tzinfo):
     def __init__(self):
         super(tzlocal, self).__init__()
 
-        self._std_offset = datetime.timedelta(seconds=-time.timezone)
+        self.__std_offset = datetime.timedelta(seconds=-time.timezone)
         if time.daylight:
-            self._dst_offset = datetime.timedelta(seconds=-time.altzone)
+            self.__dst_offset = datetime.timedelta(seconds=-time.altzone)
         else:
-            self._dst_offset = self._std_offset
+            self.__dst_offset = self._std_offset
 
-        self._dst_saved = self._dst_offset - self._std_offset
-        self._hasdst = bool(self._dst_saved)
+        self.__dst_saved = self._dst_offset - self._std_offset
+        self.__hasdst = bool(self._dst_saved)
+
+    # These properties have been added as a Seequent patch to handle persisted tzlocals made with an earlier version of
+    # dateutils where tzlocal instances were stateless.
+    @property
+    def _std_offset(self):
+        if not hasattr(self, '__std_offset'):
+            self.__std_offset = datetime.timedelta(seconds=-time.timezone)
+        return self.__std_offset
+
+    @_std_offset.setter
+    def _std_offset(self, value):
+        self.__std_offset = value
+
+    @property
+    def _dst_offset(self):
+        if not hasattr(self, '__dst_offset'):
+            if time.daylight:
+                self.__dst_offset = datetime.timedelta(seconds=-time.altzone)
+            else:
+                self.__dst_offset = self._std_offset
+        return self.__dst_offset
+
+    @_dst_offset.setter
+    def _dst_offset(self, value):
+        self.__dst_offset = value
+
+    @property
+    def _dst_saved(self):
+        if not hasattr(self, '__dst_saved'):
+            self.__dst_saved = self._dst_offset - self._std_offset
+        return self.__dst_saved
+
+    @_dst_saved.setter
+    def _dst_saved(self, value):
+        self.__dst_saved = value
+
+    @property
+    def _hasdst(self):
+        if not hasattr(self, '__hasdst'):
+            self.__hasdst = bool(self._dst_saved)
+        return self.__hasdst
+
+    @_hasdst.setter
+    def _hasdst(self, value):
+        self.__hasdst = value
 
     def utcoffset(self, dt):
         if dt is None and self._hasdst:
