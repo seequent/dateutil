@@ -1,47 +1,58 @@
 #!/usr/bin/python
 from os.path import isfile
-import codecs
 import os
-import re
 
-from setuptools import setup
+import setuptools
+from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 
-from dateutil._version import VERSION
+from distutils.version import LooseVersion
+import warnings
+
+import io
+import sys
 
 if isfile("MANIFEST"):
     os.unlink("MANIFEST")
 
-setup(name="python-dateutil",
-      version=VERSION,
-      description="Extensions to the standard Python datetime module",
-      author="Paul Ganssle",
-      author_email="dateutil@python.org",
-      url="https://dateutil.readthedocs.io",
-      license="Simplified BSD",
-      long_description="""
-The dateutil module provides powerful extensions to the
-datetime module available in the Python standard library.
-""",
-      packages=["dateutil", "dateutil.zoneinfo", "dateutil.tz"],
-      package_data={"dateutil.zoneinfo": ["dateutil-zoneinfo.tar.gz"]},
-      zip_safe=True,
-      requires=["six"],
-      install_requires=["six >=1.5"],  # XXX fix when packaging is sane again
-      classifiers=[
-          'Development Status :: 5 - Production/Stable',
-          'Intended Audience :: Developers',
-          'License :: OSI Approved :: BSD License',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 2.6',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.2',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: 3.5',
-          'Programming Language :: Python :: 3.6',
-          'Topic :: Software Development :: Libraries',
-      ],
-      test_suite="dateutil.test"
+if LooseVersion(setuptools.__version__) <= LooseVersion("24.3"):
+    warnings.warn("python_requires requires setuptools version > 24.3",
+                  UserWarning)
+
+
+class Unsupported(TestCommand):
+    def run(self):
+        sys.stderr.write("Running 'test' with setup.py is not supported. "
+                         "Use 'pytest' or 'tox' to run the tests.\n")
+        sys.exit(1)
+
+
+###
+# Load metadata
+
+def README():
+    with io.open('README.rst', encoding='utf-8') as f:
+        readme_lines = f.readlines()
+
+    # The .. doctest directive is not supported by PyPA
+    lines_out = []
+    for line in readme_lines:
+        if line.startswith('.. doctest'):
+            lines_out.append('.. code-block:: python3\n')
+        else:
+            lines_out.append(line)
+
+    return ''.join(lines_out)
+README = README()  # NOQA
+
+
+setup(
+      use_scm_version={
+          'write_to': 'dateutil/_version.py',
+      },
+      ## Needed since doctest not supported by PyPA.
+      long_description = README,
+      cmdclass={
+          "test": Unsupported
+      }
       )

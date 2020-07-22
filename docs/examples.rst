@@ -138,7 +138,7 @@ Next wednesday, but not today.
     datetime.date(2003, 9, 24)
 
 Following
-[http://www.cl.cam.ac.uk/~mgk25/iso-time.html ISO year week number notation]
+`ISO year week number notation <https://www.cl.cam.ac.uk/~mgk25/iso-time.html>`_
 find the first day of the 15th week of 1997.
 
 .. doctest:: relativedelta
@@ -511,7 +511,7 @@ Every 18 months on the 10th thru 15th of the month for 10 occurrences.
      datetime.datetime(1999, 3, 13, 9, 0)]
 
 
-Every Tuesday, every other month, 6 occurences.
+Every Tuesday, every other month, 6 occurrences.
 
 .. doctest:: rrule
    :options: +NORMALIZE_WHITESPACE
@@ -873,7 +873,7 @@ But when an `rruleset` is needed, it is automatically used.
 
 
 parse examples
------------
+--------------
 The following code will prepare the environment:
 
 .. doctest:: tz
@@ -1190,21 +1190,34 @@ Other random formats:
     datetime.datetime(1990, 6, 13, 5, 50)
 
 
+Override parserinfo with a custom parserinfo
+
+.. doctest:: tz
+
+   >>> from dateutil.parser import parse, parserinfo
+   >>> class CustomParserInfo(parserinfo):
+   ...     # e.g. edit a property of parserinfo to allow a custom 12 hour format
+   ...     AMPM = [("am", "a", "xm"), ("pm", "p")]
+   >>> parse('2018-06-08 12:06:58 XM', parserinfo=CustomParserInfo())
+   datetime.datetime(2018, 6, 8, 0, 6, 58)
+
+
+
 tzutc examples
 --------------
 
 .. doctest:: tzutc
 
     >>> from datetime import *
-    >>> from dateutil.tz import *
+    >>> from dateutil import tz
 
     >>> datetime.now()
     datetime.datetime(2003, 9, 27, 9, 40, 1, 521290)
 
-    >>> datetime.now(tzutc())
+    >>> datetime.now(tz.UTC)
     datetime.datetime(2003, 9, 27, 12, 40, 12, 156379, tzinfo=tzutc())
 
-    >>> datetime.now(tzutc()).tzname()
+    >>> datetime.now(tz.UTC).tzname()
     'UTC'
 
 
@@ -1224,7 +1237,7 @@ tzoffset examples
     >>> datetime.now(tzoffset("BRST", -10800)).tzname()
     'BRST'
 
-    >>> datetime.now(tzoffset("BRST", -10800)).astimezone(tzutc())
+    >>> datetime.now(tzoffset("BRST", -10800)).astimezone(UTC)
     datetime.datetime(2003, 9, 27, 12, 53, 11, 446419,
               tzinfo=tzutc())
 
@@ -1254,8 +1267,6 @@ tzstr examples
 Here are examples of the recognized formats:
 
   * `EST5EDT`
-  * `EST5EDT,4,0,6,7200,10,0,26,7200,3600`
-  * `EST5EDT,4,1,0,7200,10,-1,0,7200,3600`
   * `EST5EDT4,M4.1.0/02:00:00,M10-5-0/02:00`
   * `EST5EDT4,95/02:00:00,298/02:00`
   * `EST5EDT4,J96/02:00:00,J299/02:00`
@@ -1274,7 +1285,7 @@ in the year of 2003.
 
 Here is the example mentioned in the
 
-[http://www.python.org/doc/current/lib/module-time.html time module documentation].
+[https://docs.python.org/3/library/time.html time module documentation].
 
 .. testsetup:: tzstr
 
@@ -1313,7 +1324,7 @@ Are these really equivalent?
 
 .. doctest:: tzstr
 
-    >>> tzstr('EST5EDT') == tzstr('EST5EDT,4,1,0,7200,10,-1,0,7200,3600')
+    >>> tzstr('EST5EDT') == tzstr('EST5EDT,M4.1.0,M10.5.0')
     True
 
 
@@ -1328,7 +1339,7 @@ Check the daylight limit.
     'EDT'
     >>> datetime(2003, 10, 26, 0, 59, tzinfo=tz).tzname()
     'EDT'
-    >>> datetime(2003, 10, 26, 1, 00, tzinfo=tz).tzname()
+    >>> datetime(2003, 10, 26, 2, 00, tzinfo=tz).tzname()
     'EST'
 
 
@@ -1362,7 +1373,7 @@ DST is 1h in the given example) instead of the DST time. That's how
 the `tzinfo` subtypes should deal with the extra hour that happens
 when going back to the standard time. Check
 
-[http://www.python.org/doc/current/lib/datetime-tzinfo.html tzinfo documentation]
+[https://docs.python.org/3/library/datetime.html#datetime.tzinfo tzinfo documentation]
 
 for more information.
 
@@ -1372,7 +1383,7 @@ tzfile examples
 .. testsetup:: tzfile
 
     from datetime import datetime
-    from dateutil.tz import tzfile, tzutc
+    from dateutil.tz import tzfile, UTC
 
 .. doctest:: tzfile
    :options: +NORMALIZE_WHITESPACE
@@ -1382,7 +1393,7 @@ tzfile examples
     datetime.datetime(2003, 9, 27, 12, 3, 48, 392138,
               tzinfo=tzfile('/etc/localtime'))
 
-    >>> datetime.now(tz).astimezone(tzutc())
+    >>> datetime.now(tz).astimezone(UTC)
     datetime.datetime(2003, 9, 27, 15, 3, 53, 70863,
               tzinfo=tzutc())
 

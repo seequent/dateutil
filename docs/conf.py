@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'dateutil'
-copyright = '2016, dateutil'
+copyright = '2019, dateutil'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -106,7 +106,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -135,7 +135,7 @@ html_theme = 'default'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = []
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -186,6 +186,20 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'dateutildoc'
 
+# -- Options for autodoc -------------------------------------------------
+
+autodoc_mock_imports = ['ctypes.wintypes', 'six.moves.winreg']
+
+# Need to mock this out specifically to avoid errors
+import ctypes
+def pointer_mock(*args, **kwargs):
+    try:
+        return ctypes.POINTER(*args, **kwargs)
+    except Exception:
+        return None
+
+ctypes.POINTER = pointer_mock
+sys.modules['ctypes'] = ctypes
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -264,3 +278,12 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+# -- Link checking options -------------------------------------------------
+linkcheck_ignore = [
+    # This has been spotty lately so we're adding a mirror
+    r'https://pgp.mit.edu',
+]
+
+# Reduce problems with ephemeral failures
+linkcheck_retries = 5
