@@ -213,7 +213,7 @@ class tzlocal(_tzinfo):
 
         self.__dst_saved = self._dst_offset - self._std_offset
         self.__hasdst = bool(self._dst_saved)
-        self._tznames = tuple(time.tzname)
+        self.__tznames = tuple(time.tzname)
         
     # These properties have been added as a Seequent patch to handle persisted tzlocals made with an earlier version of
     # dateutils where tzlocal instances were stateless.
@@ -259,6 +259,12 @@ class tzlocal(_tzinfo):
     @_hasdst.setter
     def _hasdst(self, value):
         self.__hasdst = value
+
+    @property
+    def _tznames(self):
+        if not hasattr(self, '__tznames'):
+            self.__tznames = tuple(time.tzname)
+        return self.__tznames
 
     def utcoffset(self, dt):
         if dt is None and self._hasdst:
