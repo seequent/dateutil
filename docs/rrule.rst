@@ -9,7 +9,13 @@ Classes
 -------
 
 .. autoclass:: rrule
+   :members:
+   :undoc-members:
+   :inherited-members:
 .. autoclass:: rruleset
+   :members:
+   :undoc-members:
+   :inherited-members:
 
 Functions
 ---------
@@ -335,7 +341,7 @@ Every Tuesday, every other month, 6 occurrences.
      datetime.datetime(1997, 11, 4, 9, 0)]
 
 
-Yearly in June and July for 10 occurrences.
+Yearly in June and July for 4 occurrences.
 
 .. doctest:: rrule
    :options: +NORMALIZE_WHITESPACE
